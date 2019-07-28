@@ -1,0 +1,27 @@
+language: go
+go:
+  - "1.12.x"
+
+env:
+  global:
+    secure: "Z79th1hv63cvfrAdtndyxae7nhMXVlTNzVrV5F521RmdZlgDbLfD14ScxaHFp9apAmfTl+hH+nTnY9dnZKv+ZTMxuQ2ocaWH1+PK3WWxloHckqfjBoVWNYXWVyXCf0uJ1//tr8DMjVnwGnlfskDqEgjmKZfer59J+aOYUQx5fLEbxPEvZgK2vbeP/iNFGUlkw1l3VF0zx/MbEBvtYjPq79Jhi080NvR//PXMiJFnON3F9kpGafW/+igUS+KCreLVhwb1OC/uubeFMsbizpBb0aFfAnx6cYXB9MAzlSlptrkoGpHHKnI3AQJOKIvaNi3DJlNgZ/IQ8VBiW5ReeAIxUa0exs79ufFl23en5FqZOCV7ExZBmWtRvS3XJ/S3ixgM3kncv7P8HCjWv3mj/yRSrgtXx/DRlcKHbZ3ellu1YYAbGhMJqqJi9pGepF5OKYm4fRqRoH45ilNTLV/XuEEZFmjXaVuyUA/siF/J16TIQe5USE9aaDD14MpU9iiXUhgaP4gmlJ0c+KSpJZKAW+Nc2vt3QF38ZMVtUK0VLsBIzCIbg1rA9P/YsaBofIYeHfVfgoa624gG51wShrAYv5lqX5FFihSy1OTnA6nr3Kqm4NQQVTi3x4qoq1sBqm3WJky7MQJ4dXpuBXC3qUzcE1zCbWkjIAvsvZfESVLp7dgRBWg="
+
+jobs:
+  include:
+    - stage: Build & test
+      go: 1.12.x
+      script:
+        - go build ./...
+        - go test ./...
+
+    - stage: Fuzzit (Fuzzing)
+      if: branch = master AND type IN (push)
+      go: 1.12.x
+      script:
+        - ./ci/fuzzit.sh fuzzing
+
+    - stage: Fuzzit (Sanity)
+      if: type IN (pull_request)
+      go: 1.12.x
+      script:
+        - ./ci/fuzzit.sh sanity
