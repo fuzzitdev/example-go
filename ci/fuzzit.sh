@@ -8,7 +8,7 @@ go build ./...
 go-fuzz-build -libfuzzer -o fuzzer.a ./...
 clang -fsanitize=fuzzer fuzzer.a -o fuzzer
 
-wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v1.2.7/fuzzit_Linux_x86_64
+wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.0.0/fuzzit_Linux_x86_64
 chmod a+x fuzzit
 ./fuzzit auth ${FUZZIT_API_KEY}
 export TARGET_ID=2n6hO2dQzylLxX5GGhRG
