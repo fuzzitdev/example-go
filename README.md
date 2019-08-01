@@ -82,14 +82,14 @@ go get github.com/fuzzitdev/example-go
 
 ```bash
 cd /go/src/github.com/fuzzitdev/example-go
-go-fuzz-build -libfuzzer ./...
-clang-9 -fsanitize=fuzzer parser-fuzz.a -o parser-fuzz.libfuzzer
+go-fuzz-build -libfuzzer -o fuzzer.a ./...
+clang-9 -fsanitize=fuzzer fuzzer.a -o fuzzer
 ```
 
 ### Running the fuzzer
 
 ```bash
-./parser-fuzz.libfuzzer
+./fuzzer
 ```
 
 Will print the following output and stacktrace:
