@@ -1,5 +1,11 @@
 set -xe
 
+if [ -z ${1+x} ]; then
+    echo "must call with job type as first argument e.g. 'fuzzing' or 'sanity'"
+    echo "see https://github.com/fuzzitdev/example-go/blob/master/.travis.yml"
+    exit 1
+fi
+
 ## Install go-fuzz
 go get -u github.com/dvyukov/go-fuzz/go-fuzz github.com/dvyukov/go-fuzz/go-fuzz-build
 
