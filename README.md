@@ -8,7 +8,7 @@ This is an example of how to integrate your [go-fuzz](https://github.com/dvyukov
 
 This example will show the following steps:
 * [Building and running locally a simple go-fuzz target](#building-go-fuzz-target)
-* [Integrate the go-fuzz target with Fuzzit via Travis-CI](#integrating-with-fuzzit)
+* [Integrate the go-fuzz target with Fuzzit via Travis-CI](#integrating-with-fuzzit-from-ci)
 
 Result:
 * Fuzzit will run the fuzz targets continuously on daily basis with the latest release.
@@ -82,14 +82,14 @@ go get github.com/fuzzitdev/example-go
 
 ```bash
 cd /go/src/github.com/fuzzitdev/example-go
-go-fuzz-build -libfuzzer ./...
-clang-9 -fsanitize=fuzzer parser-fuzz.a -o parser-fuzz.libfuzzer
+go-fuzz-build -libfuzzer -o fuzzer.a .
+clang-9 -fsanitize=fuzzer fuzzer.a -o fuzzer
 ```
 
 ### Running the fuzzer
 
 ```bash
-./parser-fuzz.libfuzzer
+./fuzzer
 ```
 
 Will print the following output and stacktrace:
@@ -138,17 +138,20 @@ artifact_prefix='./'; Test unit written to ./crash-df779ced6b712c5fca247e465de2d
 Base64: RlVaWkk=
 ```
 
+## Integrating with Fuzzit from CI
 
-## Integrating with Fuzzit
-
-The integration with fuzzit is easy and consists of adding a travis stage, downloading the fuzzit cli,
-authenticating and uploading the fuzzer to fuzzit.
+The best way to integrate with Fuzzit is by adding a stage in your Contintous Build system
+(like Travis CI or Circle CI). In that stage:
+* build a fuzz target
+* download `fuzzit` cli
+* authenticate with `fuzzit auth`
+* create a fuzzing job by uploading fuzz target
 
 here is the relevant snippet from the [./ci/fuzzit.sh](https://github.com/fuzzitdev/example-go/blob/master/ci/fuzzit.sh)
 which is being run by [.travis.yml](https://github.com/fuzzitdev/example-go/blob/master/.travis.yml)
 
 ```bash
-wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v1.2.7/fuzzit_Linux_x86_64
+wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.0.0/fuzzit_Linux_x86_64
 chmod a+x fuzzit
 ./fuzzit auth ${FUZZIT_API_KEY}
 export TARGET_ID=2n6hO2dQzylLxX5GGhRG
@@ -156,9 +159,12 @@ export TARGET_ID=2n6hO2dQzylLxX5GGhRG
 ``` 
 
 NOTE: In production it is advised to download a pinned version of the [CLI](https://github.com/fuzzitdev/fuzzit)
-like in the example. In development you can use latest with the following link:
-https://github.com/fuzzitdev/fuzzit/releases/latest/download/fuzzit_\<Os\>_\<Arch\>
+like in the example. In development you can use latest version:
+https://github.com/fuzzitdev/fuzzit/releases/latest/download/fuzzit_${OS}_${ARCH}.
+Valid values for `${OS}` are: `Linux`, `Darwin`, `Windows`.
+Valid values for `${ARCH}` are: `x86_64` and `i386`.
 
+The steps are:
 * Authenticate with the API key (you should keep this secret) you can find in the fuzzit settings dashboard.
 * Upload the fuzzer via create job command and create the fuzzing job. In This example we use two type of jobs:
     * Fuzzing job which is run on every push to master which continuous the previous job just with the new release.
