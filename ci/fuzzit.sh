@@ -10,6 +10,11 @@ if [ -z ${1+x} ]; then
     exit 1
 fi
 
+if [ -z "${FUZZIT_API_KEY}" ]; then
+    echo "Please set env variable FUZZIT_API_KEY to api key for your project"
+    exit 1
+fi
+
 ## Install go-fuzz
 go get -u github.com/dvyukov/go-fuzz/go-fuzz github.com/dvyukov/go-fuzz/go-fuzz-build
 
