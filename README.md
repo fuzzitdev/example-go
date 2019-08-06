@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/fuzzitdev/example-go.svg?branch=master)](https://travis-ci.org/fuzzitdev/example-go)
-![fuzzit](https://app.fuzzit.dev/badge?org_id=hP8u8bNAda91Cnj0mKPX&branch=master)
+[![fuzzit](https://app.fuzzit.dev/badge?org_id=hP8u8bNAda91Cnj0mKPX&branch=master)](https://fuzzit.dev)
 
 # Continuous Fuzzing for Golang Example
 
@@ -140,12 +140,22 @@ Base64: RlVaWkk=
 
 ## Integrating with Fuzzit from CI
 
-The best way to integrate with Fuzzit is by adding a stage in your Contintous Build system
-(like Travis CI or Circle CI). In that stage:
+The best way to integrate with Fuzzit is by adding a two stages in your Contintous Build system
+(like Travis CI or Circle CI).
+
+Fuzzing stage:
+
 * build a fuzz target
 * download `fuzzit` cli
 * authenticate with `fuzzit auth`
 * create a fuzzing job by uploading fuzz target
+
+Sanity stage
+* build a fuzz target
+* download `fuzzit` cli
+* authenticate with `fuzzit auth`
+* create a local sanity fuzzing job - This will pull all the generated corpus and run them through
+the fuzzing binary. If new bugs are introduced this will fail the CI and alert
 
 here is the relevant snippet from the [./ci/fuzzit.sh](https://github.com/fuzzitdev/example-go/blob/master/ci/fuzzit.sh)
 which is being run by [.travis.yml](https://github.com/fuzzitdev/example-go/blob/master/.travis.yml)
