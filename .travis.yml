@@ -2,9 +2,13 @@ language: go
 go:
   - "1.12.x"
 
+services:
+  - docker
+
 env:
   global:
-    secure: "Z79th1hv63cvfrAdtndyxae7nhMXVlTNzVrV5F521RmdZlgDbLfD14ScxaHFp9apAmfTl+hH+nTnY9dnZKv+ZTMxuQ2ocaWH1+PK3WWxloHckqfjBoVWNYXWVyXCf0uJ1//tr8DMjVnwGnlfskDqEgjmKZfer59J+aOYUQx5fLEbxPEvZgK2vbeP/iNFGUlkw1l3VF0zx/MbEBvtYjPq79Jhi080NvR//PXMiJFnON3F9kpGafW/+igUS+KCreLVhwb1OC/uubeFMsbizpBb0aFfAnx6cYXB9MAzlSlptrkoGpHHKnI3AQJOKIvaNi3DJlNgZ/IQ8VBiW5ReeAIxUa0exs79ufFl23en5FqZOCV7ExZBmWtRvS3XJ/S3ixgM3kncv7P8HCjWv3mj/yRSrgtXx/DRlcKHbZ3ellu1YYAbGhMJqqJi9pGepF5OKYm4fRqRoH45ilNTLV/XuEEZFmjXaVuyUA/siF/J16TIQe5USE9aaDD14MpU9iiXUhgaP4gmlJ0c+KSpJZKAW+Nc2vt3QF38ZMVtUK0VLsBIzCIbg1rA9P/YsaBofIYeHfVfgoa624gG51wShrAYv5lqX5FFihSy1OTnA6nr3Kqm4NQQVTi3x4qoq1sBqm3WJky7MQJ4dXpuBXC3qUzcE1zCbWkjIAvsvZfESVLp7dgRBWg="
+    # This is FUZZIT_API_KEY created with https://docs.travis-ci.com/user/environment-variables/#encrypting-environment-variables
+    secure: "mUwEzKZKeF6nLswJOCsYxBIQct7v79Wz0ZfiRvPtpKdPD0hNsWHZHXd25E1gTDyAxwUZ1jXoOhMBBUejEAMEe8P64Ali4GZqADxK5JrBGfLNmfvwQJNiJQEyazwhD5m5X+N4ypaxgAfU2jjKn+14u9eKqOYjnKjMbZB2eyEH+F+xtpqA9UsdLbVaI/Pok2CooOk/9sWMxtbqIbwIlqb4l3Sld4/SH3ag7jDWdmcM7sVDALAlDNESGgigjJ47J8uVkV/+kL1CPJY9VfpcXPTgrZmep7QR7/qb2gKGqJgz7dYNLa/iv8vENMyycLsh5GtJzeZU3dLHdDIZH8iUf9+OEr3XKZq0JAh2najxPDrc4A/3VjTPNSgZGEuqTbt1EKGRsVNSIUoBemDobcIEKsyUInQobF2ievtaJqACFG6iVTX2bykS2Y75P0XzHKAiso+Yer0JeAD+xhkzC+m78Gr//Bpb2t2ty2bwgKyukUIbm/Xzmg7yGsl0HFQ6B3AsL0LklHgwHLIPrOcvBZG7F9w4l8U11s3D9e4Ic1P3V5TGABzZ3QvKHmj6iMvAFuuF749tR9iH14ryHyPg50QshoOPYLWLhsCQWOkJ4haa49NsfJMB9ZwJWceq0gc6wA51J7tnqEivohWiwZrZo6uDlHdn/oO1IbwqlWc16FnbSjB5DxY="
 
 jobs:
   include:
@@ -13,6 +17,7 @@ jobs:
       script:
         - go build ./...
         - go test ./...
+        - ./ci/fuzzit.sh sanity
 
     - stage: Fuzzit (Fuzzing)
       if: branch = master AND type IN (push)
@@ -20,8 +25,3 @@ jobs:
       script:
         - ./ci/fuzzit.sh fuzzing
 
-    - stage: Fuzzit (Sanity)
-      if: type IN (pull_request)
-      go: 1.12.x
-      script:
-        - ./ci/fuzzit.sh sanity
