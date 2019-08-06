@@ -18,7 +18,7 @@ go build ./...
 go-fuzz-build -libfuzzer -o fuzzer.a .
 clang -fsanitize=fuzzer fuzzer.a -o fuzzer
 
-wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.2/fuzzit_Linux_x86_64
+wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.3/fuzzit_Linux_x86_64
 chmod a+x fuzzit
 ./fuzzit auth ${FUZZIT_API_KEY}
 
