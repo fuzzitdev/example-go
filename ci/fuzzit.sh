@@ -20,7 +20,6 @@ fi
 go get -u github.com/dvyukov/go-fuzz/go-fuzz github.com/dvyukov/go-fuzz/go-fuzz-build
 
 ## build fuzz target
-go build ./...
 
 # target name can only contain lower-case letters (a-z), digits (0-9) and a dash (-)
 TARGET=parse-complex
@@ -30,6 +29,7 @@ clang -fsanitize=fuzzer ${TARGET}.a -o ${TARGET}
 
 # you can repeat the above for more fuzzing targets
 
+## Install fuzzit cmd-line tool for talking to https://fuzzit.dev
 wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.12/fuzzit_Linux_x86_64
 chmod a+x fuzzit
 
@@ -39,8 +39,11 @@ chmod a+x fuzzit
 # create fuzzing target on the server if it doesn't already exist
 ./fuzzit create target ${TARGET} || true
 
+GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+GIT_COMMIT=`git rev-parse --short HEAD`
+
 if [ $1 == "fuzzing" ]; then
-    ./fuzzit create job --branch $TRAVIS_BRANCH --revision $TRAVIS_COMMIT ${TARGET} ./${TARGET}
+    ./fuzzit create job --branch $GIT_BRANCH --revision $GIT_COMMIT ${TARGET} ./${TARGET}
 else
     ./fuzzit create job --local ${TARGET} ./${TARGET}
 fi
