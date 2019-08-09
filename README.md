@@ -3,31 +3,31 @@
 
 # Continuous Fuzzing for Golang Example
 
-This is an example of how to integrate your [go-fuzz](https://github.com/dvyukov/go-fuzz) targets with 
+This is an example of how to integrate your [go-fuzz](https://github.com/dvyukov/go-fuzz) targets with the
 [Fuzzit](https://fuzzit.dev) Continuous Fuzzing Platform (Go support is currently in Alpha).
 
 This example will show the following steps:
-* [Building and running locally a simple go-fuzz target](#building-go-fuzz-target)
+* [Building and running a simple go-fuzz target locally](#building-go-fuzz-target)
 * [Integrate the go-fuzz target with Fuzzit via Travis-CI](#integrating-with-fuzzit-from-ci)
 
 Result:
-* Fuzzit will run the fuzz targets continuously on daily basis with the latest release.
+* Fuzzit will run the fuzz targets continuously on a daily basis with the latest release.
 * Fuzzit will run sanity tests on every pull-request with the generated corpus and crashes to catch bugs early on.
 
-Fuzzing for go can both help find complex bugs as well as correctness bugs. Go is a safe language so memory corruption bugs
-are very unlikely to happen but some bugs can still have security [implications](https://blog.cloudflare.com/dns-parser-meet-go-fuzzer/).
+Fuzzing for go can help find both complex bugs, as well as correctness bugs. Go is a safe language so memory corruption bugs
+are very unlikely to happen, but some bugs can still have security [implications](https://blog.cloudflare.com/dns-parser-meet-go-fuzzer/).
 
-This tutorial is less about how to build go-fuzz targets but more about how to integrate the targets with Fuzzit. A lot of 
+This tutorial focuses less on how to build go-fuzz targets and more on how to integrate the targets with Fuzzit. A lot of 
 great information is available at the [go-fuzz](https://github.com/dvyukov/go-fuzz) repository.
 
 ## Building go-fuzz Target
 
-The targets that are currently supported on Fuzzit is targets that utilize the libFuzzer engine. This is why we will
-use the `-libfuzzer` flag of go-fuzz and compile it on Linux machine (should be also supported on mac in the future)
+The targets that are currently supported on Fuzzit are targets that utilize the libFuzzer engine. This is why we will
+use the `-libfuzzer` flag of go-fuzz and compile it on a Linux machine (should also be supported on mac in the future)
 
 ### Understanding the bug
 
-The bug is located at `parser_complex.go` with the following code
+The bug is located at `parser_complex.go` in the following code
 
 ```go
 package parser
@@ -42,12 +42,12 @@ func ParseComplex(data [] byte) bool {
 }
 ```
 
-This is the simplest example to demonstrate a classic off-by-one/out-of-bound error which causes the program to crash.
+This is the simplest example to demonstrate a classic off-by-one/out-of-bounds error which causes the program to crash.
 Instead of `len(data) == 5` the correct code will be `len(data) == 6`.
 
 ### Understanding the fuzzer
 
-the fuzzer is located at `parse_complex_fuzz.go` with the following code:
+the fuzzer is located at `parse_complex_fuzz.go` in the following code:
 
 ```go
 // +build gofuzz
@@ -140,7 +140,7 @@ Base64: RlVaWkk=
 
 ## Integrating with Fuzzit from CI
 
-The best way to integrate with Fuzzit is by adding a two stages in your Contintous Build system
+The best way to integrate with Fuzzit is by adding a two stages in your Continuous Build system
 (like Travis CI or Circle CI).
 
 Fuzzing stage:
@@ -148,13 +148,13 @@ Fuzzing stage:
 * build a fuzz target
 * download `fuzzit` cli
 * authenticate with `fuzzit auth`
-* create a fuzzing job by uploading fuzz target
+* create a fuzzing job by uploading the fuzz target
 
 Sanity stage
 * build a fuzz target
 * download `fuzzit` cli
 * authenticate with `fuzzit auth`
-* create a local sanity fuzzing job - This will pull all the generated corpus and run them through
+* create a local sanity fuzzing job - This will pull all the generated corpuses and run them through
 the fuzzing binary. If new bugs are introduced this will fail the CI and alert
 
 here is the relevant snippet from the [./ci/fuzzit.sh](https://github.com/fuzzitdev/example-go/blob/master/ci/fuzzit.sh)
@@ -169,18 +169,18 @@ export TARGET_ID=2n6hO2dQzylLxX5GGhRG
 ``` 
 
 NOTE: In production it is advised to download a pinned version of the [CLI](https://github.com/fuzzitdev/fuzzit)
-like in the example. In development you can use latest version:
+like in the example. In development you can use the latest version:
 https://github.com/fuzzitdev/fuzzit/releases/latest/download/fuzzit_${OS}_${ARCH}.
 Valid values for `${OS}` are: `Linux`, `Darwin`, `Windows`.
 Valid values for `${ARCH}` are: `x86_64` and `i386`.
 
 The steps are:
-* Authenticate with the API key (you should keep this secret) you can find in the fuzzit settings dashboard.
-* Upload the fuzzer via create job command and create the fuzzing job. In This example we use two type of jobs:
-    * Fuzzing job which is run on every push to master which continuous the previous job just with the new release.
-    Continuous means all the current corpus is kept and the fuzzer will try to find new paths in the newly added code
-    * In a Pull-Request the fuzzer will run a quick "sanity" test running the fuzzer through all the generated corpus
+* Authenticate with the API key (you should keep this secret) from the fuzzit settings dashboard.
+* Upload the fuzzer via `create job` command and create the fuzzing job. In This example we use two type of jobs:
+    * A fuzzing job which is run on every push to master, that continues the previous job with the new release.
+    This means the current corpus is kept and the fuzzer will try to find new paths in the newly added code.
+    * In a Pull-Request the fuzzer will run a quick "sanity" test running the fuzzer through all the generated corpuses
     and crashes to see if the Pull-Request doesnt introduce old or new crashes. This will be alred via the configured
-    channel in the dashboard
+    channel in the dashboard.
 * The Target is not a secret. This ID can be retrieved from the dashboard after your create the appropriate target in the dashboard.
-Each target has it's own corpus and crashes.
+Each target has its own corpus and crashes.
