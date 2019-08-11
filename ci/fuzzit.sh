@@ -5,7 +5,7 @@ set -xe
 export GO111MODULE="off"
 
 if [ -z ${1+x} ]; then
-    echo "must call with job type as first argument e.g. 'fuzzing' or 'sanity'"
+    echo "must call with job type as first argument: 'fuzzing' or 'regression'"
     echo "see https://github.com/fuzzitdev/example-go/blob/master/.travis.yml"
     exit 1
 fi
@@ -30,11 +30,8 @@ clang -fsanitize=fuzzer ${TARGET}.a -o ${TARGET}
 # you can repeat the above for more fuzzing targets
 
 ## Install fuzzit cmd-line tool for talking to https://fuzzit.dev
-wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.12/fuzzit_Linux_x86_64
+wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.17/fuzzit_Linux_x86_64
 chmod a+x fuzzit
-
-# authenticate with fuzzit.dev server using api key from settings panel in the dashboard
-./fuzzit auth ${FUZZIT_API_KEY}
 
 # create fuzzing target on the server if it doesn't already exist
 ./fuzzit create target ${TARGET} || true
