@@ -68,9 +68,9 @@ build_and_run_regression_fuzzing () {
     ./fuzzit create job --local ${FUZZIT_ORG}/${TARGET} ${TARGET}
 }
 
-if [ "fuzzing" == $1 ]; then
+if [ "fuzzing" == "${1}" ]; then
     build_and_upload_for_fuzzing
-elif [ "regression" == $1 ]; then
+elif [ "regression" == "${1}" ]; then
     build_and_run_regression_fuzzing
 else
     echo "call me with job type: 'fuzzing' or 'regression'"
