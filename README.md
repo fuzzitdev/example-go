@@ -155,7 +155,7 @@ Regression stage
 * create a local regression fuzzing job - This will pull all the generated corpuses and run them through
 the fuzzing binary. If new bugs are introduced this will fail the CI and alert
 
-Here is the relevant snippet from the [./ci/fuzzit.sh](https://github.com/fuzzitdev/example-go/blob/master/ci/fuzzit.sh)
+Here is the relevant snippet from the [fuzzit.sh](https://github.com/fuzzitdev/example-go/blob/master/fuzzit.sh)
 which is being run by [.travis.yml](https://github.com/fuzzitdev/example-go/blob/master/.travis.yml)
 
 ```bash
