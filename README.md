@@ -145,30 +145,37 @@ The best way to integrate with Fuzzit is by adding a two stages in your Continuo
 
 Fuzzing stage:
 
-* build a fuzz target
+* build a fuzzing target
 * download `fuzzit` cli
-* authenticate with `fuzzit auth`
-* create a fuzzing job by uploading the fuzz target
+* create a fuzzing job by uploading the fuzzing target
 
-Sanity stage
-* build a fuzz target
+Regression stage
+* build a fuzzing target
 * download `fuzzit` cli
-* authenticate with `fuzzit auth`
-* create a local sanity fuzzing job - This will pull all the generated corpuses and run them through
+* create a local regression fuzzing job - This will pull all the generated corpuses and run them through
 the fuzzing binary. If new bugs are introduced this will fail the CI and alert
 
-here is the relevant snippet from the [./ci/fuzzit.sh](https://github.com/fuzzitdev/example-go/blob/master/ci/fuzzit.sh)
+Here is the relevant snippet from the [./ci/fuzzit.sh](https://github.com/fuzzitdev/example-go/blob/master/ci/fuzzit.sh)
 which is being run by [.travis.yml](https://github.com/fuzzitdev/example-go/blob/master/.travis.yml)
 
 ```bash
-wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.0.0/fuzzit_Linux_x86_64
+
+if [ -z "${FUZZIT_API_KEY}" ]; then
+    echo "Please set env variable FUZZIT_API_KEY to api key for your project"
+    echo "Api key for your account: https://app.fuzzit.dev/orgs/<ACCOUNT>/settings"
+    exit 1
+fi
+
+wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.17/fuzzit_Linux_x86_64
 chmod a+x fuzzit
-./fuzzit auth ${FUZZIT_API_KEY}
-export TARGET_ID=2n6hO2dQzylLxX5GGhRG
-./fuzzit create job --type $1 --branch $TRAVIS_BRANCH --revision $TRAVIS_COMMIT $TARGET_ID ./fuzzer
+
+export TARGET=example-go
+GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+GIT_COMMIT=`git rev-parse --short HEAD`
+./fuzzit create job --type $1 --branch $GIT_BRANCH --revision $GIT_COMMIT $TARGET ./fuzzer
 ``` 
 
-NOTE: In production it is advised to download a pinned version of the [CLI](https://github.com/fuzzitdev/fuzzit)
+In production it is advised to download a pinned version of the [CLI](https://github.com/fuzzitdev/fuzzit)
 like in the example. In development you can use the latest version:
 https://github.com/fuzzitdev/fuzzit/releases/latest/download/fuzzit_${OS}_${ARCH}.
 Valid values for `${OS}` are: `Linux`, `Darwin`, `Windows`.
@@ -179,8 +186,9 @@ The steps are:
 * Upload the fuzzer via `create job` command and create the fuzzing job. In This example we use two type of jobs:
     * A fuzzing job which is run on every push to master, that continues the previous job with the new release.
     This means the current corpus is kept and the fuzzer will try to find new paths in the newly added code.
-    * In a Pull-Request the fuzzer will run a quick "sanity" test running the fuzzer through all the generated corpuses
+    * In a Pull-Request the fuzzer will run a quick regression test running the fuzzer through all the generated corpuses
     and crashes to see if the Pull-Request doesnt introduce old or new crashes. This will be alred via the configured
     channel in the dashboard.
-* The Target is not a secret. This ID can be retrieved from the dashboard after your create the appropriate target in the dashboard.
+* The name of the target is not a secret.
+
 Each target has its own corpus and crashes.
