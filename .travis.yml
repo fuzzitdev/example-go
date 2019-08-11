@@ -16,13 +16,11 @@ jobs:
     - stage: Build, Unit-Tests & Fuzz-Tests
       go: 1.12.x
       script:
-        - go build ./...
-        - go test ./...
-        - ./ci/fuzzit.sh sanity
+        - ./fuzzit.sh regression
 
     - stage: Fuzzit (Fuzzing)
       if: branch = master AND type IN (push)
       go: 1.12.x
       script:
-        - ./ci/fuzzit.sh fuzzing
+        - ./fuzzit.sh fuzzing
 
