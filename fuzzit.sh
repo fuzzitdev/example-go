@@ -3,8 +3,6 @@ set -xe
 
 # name of the organization in https://app.fuzzit.dev
 export FUZZIT_ORG="example-go"
-# github project repository
-export REPO="fuzzitdev/example-go"
 
 # target name can only contain lower-case letters (a-z), digits (0-9) and a dash (-)
 TARGET=parse-complex
