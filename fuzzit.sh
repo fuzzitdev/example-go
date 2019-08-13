@@ -17,8 +17,8 @@ go get -u github.com/dvyukov/go-fuzz/go-fuzz github.com/dvyukov/go-fuzz/go-fuzz-
 # like godep
 go get -d -v -u ./...
 
-go-fuzz-build -libfuzzer -o ${TARGET}.a .
-clang -fsanitize=fuzzer ${TARGET}.a -o ${TARGET}
+go-fuzz-build -libfuzzer -o parse-complex.a .
+clang -fsanitize=fuzzer parse-complex.a -o parse-complex
 
 ## Install fuzzit specific version for production or latest version for development :
 # https://github.com/fuzzitdev/fuzzit/releases/latest/download/fuzzit_Linux_x86_64
