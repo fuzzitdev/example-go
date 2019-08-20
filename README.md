@@ -145,14 +145,17 @@ The best way to integrate with Fuzzit is by adding a two stages in your Continuo
 
 Fuzzing stage:
 
-* build a fuzzing target
-* download `fuzzit` cli
-* create a fuzzing job by uploading the fuzzing target
+* Build a fuzzing target
+* Download `fuzzit` cli
+* Authenticate via passing `FUZZIT_API_KEY` environment variable
+* Create a fuzzing job by uploading the fuzzing target
 
 Regression stage
-* build a fuzzing target
-* download `fuzzit` cli
-* create a local regression fuzzing job - This will pull all the generated corpuses and run them through
+* Build a fuzzing target
+* Download `fuzzit` cli
+* Authenticate via passing `FUZZIT_API_KEY` environment variable OR defining the corpus as public. This way
+No authentication would be require and regression can be used for [forked PRs](https://docs.travis-ci.com/user/pull-requests#pull-requests-and-security-restrictions) as well
+* Create a local regression fuzzing job - This will pull all the generated corpuses and run them through
 the fuzzing binary. If new bugs are introduced this will fail the CI and alert
 
 Here is the relevant snippet from the [fuzzit.sh](https://github.com/fuzzitdev/example-go/blob/master/fuzzit.sh)
