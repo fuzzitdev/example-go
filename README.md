@@ -12,7 +12,7 @@ This example will show the following steps:
 
 Result:
 * Fuzzit will run the fuzz targets continuously on a daily basis with the latest release.
-* Fuzzit will run sanity tests on every pull-request with the generated corpus and crashes to catch bugs early on.
+* Fuzzit will run regression tests on every pull-request with the generated corpus and crashes to catch bugs early on.
 
 Fuzzing for go can help find both complex bugs, as well as correctness bugs. Go is a safe language so memory corruption bugs
 are very unlikely to happen, but some bugs can still have security [implications](https://blog.cloudflare.com/dns-parser-meet-go-fuzzer/).
