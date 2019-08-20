@@ -174,15 +174,3 @@ like in the example. In development you can use the latest version:
 https://github.com/fuzzitdev/fuzzit/releases/latest/download/fuzzit_${OS}_${ARCH}.
 Valid values for `${OS}` are: `Linux`, `Darwin`, `Windows`.
 Valid values for `${ARCH}` are: `x86_64` and `i386`.
-
-The steps are:
-* Authenticate with the API key (you should keep this secret) from the fuzzit settings dashboard.
-* Upload the fuzzer via `create job` command and create the fuzzing job. In This example we use two type of jobs:
-    * A fuzzing job which is run on every push to master, that continues the previous job with the new release.
-    This means the current corpus is kept and the fuzzer will try to find new paths in the newly added code.
-    * In a Pull-Request the fuzzer will run a quick regression test running the fuzzer through all the generated corpuses
-    and crashes to see if the Pull-Request doesnt introduce old or new crashes. This will be alred via the configured
-    channel in the dashboard.
-* The name of the target is not a secret.
-
-Each target has its own corpus and crashes.
