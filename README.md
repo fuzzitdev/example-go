@@ -4,7 +4,7 @@
 # Continuous Fuzzing for Golang Example
 
 This is an example of how to integrate your [go-fuzz](https://github.com/dvyukov/go-fuzz) targets with the
-[Fuzzit](https://fuzzit.dev) Continuous Fuzzing Platform (Go support is currently in Alpha).
+[Fuzzit](https://fuzzit.dev) Continuous Fuzzing Platform (Go support is currently in Beta).
 
 This example will show the following steps:
 * [Building and running a simple go-fuzz target locally](#building-go-fuzz-target)
@@ -82,8 +82,8 @@ go get github.com/fuzzitdev/example-go
 
 ```bash
 cd /go/src/github.com/fuzzitdev/example-go
-go-fuzz-build -libfuzzer -o fuzzer.a .
-clang-9 -fsanitize=fuzzer fuzzer.a -o fuzzer
+go-fuzz-build -libfuzzer -o parse-complex.a .
+clang-9 -fsanitize=fuzzer parse-complex.a -o parse-complex
 ```
 
 ### Running the fuzzer
@@ -159,20 +159,11 @@ Here is the relevant snippet from the [fuzzit.sh](https://github.com/fuzzitdev/e
 which is being run by [.travis.yml](https://github.com/fuzzitdev/example-go/blob/master/.travis.yml)
 
 ```bash
-
-if [ -z "${FUZZIT_API_KEY}" ]; then
-    echo "Please set env variable FUZZIT_API_KEY to api key for your project"
-    echo "Api key for your account: https://app.fuzzit.dev/orgs/<ACCOUNT>/settings"
-    exit 1
-fi
-
 wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.17/fuzzit_Linux_x86_64
 chmod a+x fuzzit
 
-export TARGET=example-go
-GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-GIT_COMMIT=`git rev-parse --short HEAD`
-./fuzzit create job --type $1 --branch $GIT_BRANCH --revision $GIT_COMMIT $TARGET ./fuzzer
+## upload fuzz target for long fuzz testing on fuzzit.dev server or run locally for regression
+./fuzzit create job --type ${1} fuzzitdev/parse-complex parse-complex
 ``` 
 
 In production it is advised to download a pinned version of the [CLI](https://github.com/fuzzitdev/fuzzit)
