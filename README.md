@@ -89,7 +89,7 @@ clang-9 -fsanitize=fuzzer parse-complex.a -o parse-complex
 ### Running the fuzzer
 
 ```bash
-./fuzzer
+./parse-complex
 ```
 
 Will print the following output and stacktrace:
