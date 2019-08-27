@@ -25,5 +25,13 @@ clang -fsanitize=fuzzer parse-complex.a -o parse-complex
 wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.29/fuzzit_Linux_x86_64
 chmod a+x fuzzit
 
+if ${1} == "local-regression"; then
+  LOCAL="--local"
+  TYPE=regression
+else
+  LOCAL=""
+  TYPE=fuzzing
+fi
+
 ## upload fuzz target for long fuzz testing on fuzzit.dev server or run locally for regression
-./fuzzit create job --type ${1} fuzzitdev/parse-complex parse-complex
+./fuzzit create job ${LOCAL} --type ${TYPE} fuzzitdev/parse-complex parse-complex
