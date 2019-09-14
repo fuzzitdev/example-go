@@ -4,15 +4,33 @@ package parser
 // This won't find the results for never probabbly ...
 
 import (
-	"github.com/google/gofuzz"
+	fuzz "github.com/google/gofuzz"
 	"testing"
 )
 
-func TestParseComplex(t *testing.T) {
+func TestGenerationalFuzzerParseComplex(t *testing.T) {
 	f := fuzz.New()
 	var inputString string
 	for true {
 		f.Fuzz(&inputString)
 		ParseComplex([]byte(inputString))
+	}
+}
+
+func TestParseComplex(t *testing.T) {
+	var parseTests = []struct {
+		in  string
+		out bool
+	}{
+		{"invalid", false},
+		{"invalid2", false},
+		{"invalid3", false},
+	}
+
+	for _, tc := range parseTests {
+		res := ParseComplex([]byte(tc.in))
+		if res != tc.out{
+			t.Errorf("was expecting %v but receieved %v", tc.out, res)
+		}
 	}
 }
