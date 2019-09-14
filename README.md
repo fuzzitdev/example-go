@@ -63,16 +63,7 @@ func Fuzz(data []byte) int {
 ### Setting up the development environment
 
 ```bash
-docker run -it golang:1.12.7-buster /bin/bash
-
-# Download Clang-9
-echo "deb http://apt.llvm.org/buster/ llvm-toolchain-buster main" >> /etc/apt/sources.list
-echo "deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster main" >> /etc/apt/sources.list
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key| apt-key add -
-apt update && apt install -y clang-9 lldb-9 lld-9
-
-# Download go-fuzz and go-fuzz-build
-go get -u github.com/dvyukov/go-fuzz/go-fuzz github.com/dvyukov/go-fuzz/go-fuzz-build
+docker run -it gcr.io/fuzzit-public/buster-golang12:2dc7875 /bin/bash
 
 # Download this example
 go get github.com/fuzzitdev/example-go
@@ -83,13 +74,13 @@ go get github.com/fuzzitdev/example-go
 ```bash
 cd /go/src/github.com/fuzzitdev/example-go
 go-fuzz-build -libfuzzer -o parse-complex.a .
-clang-9 -fsanitize=fuzzer parse-complex.a -o parse-complex
+clang -fsanitize=fuzzer parse-complex.a -o parse-complex
 ```
 
 ### Running the fuzzer
 
 ```bash
-./fuzzer
+./parse-complex
 ```
 
 Will print the following output and stacktrace:
@@ -162,7 +153,7 @@ Here is the relevant snippet from the [fuzzit.sh](https://github.com/fuzzitdev/e
 which is being run by [.travis.yml](https://github.com/fuzzitdev/example-go/blob/master/.travis.yml)
 
 ```bash
-wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.17/fuzzit_Linux_x86_64
+wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.35/fuzzit_Linux_x86_64
 chmod a+x fuzzit
 
 ## upload fuzz target for long fuzz testing on fuzzit.dev server or run locally for regression
