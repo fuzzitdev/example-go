@@ -153,7 +153,7 @@ Here is the relevant snippet from the [fuzzit.sh](https://github.com/fuzzitdev/e
 which is being run by [.travis.yml](https://github.com/fuzzitdev/example-go/blob/master/.travis.yml)
 
 ```bash
-wget -q -O fuzzit https://github.com/fuzzitdev/fuzzit/releases/download/v2.4.35/fuzzit_Linux_x86_64
+wget -q -O https://github.com/fuzzitdev/fuzzit/releases/latest/download/fuzzit_Linux_x86_64
 chmod a+x fuzzit
 
 ## upload fuzz target for long fuzz testing on fuzzit.dev server or run locally for regression
