@@ -1,5 +1,6 @@
+fuzzit.dev was [acquired](https://about.gitlab.com/press/releases/2020-06-11-gitlab-acquires-peach-tech-and-fuzzit-to-expand-devsecops-offering.html) by GitLab and the new home for this repo is [here](https://gitlab.com/gitlab-org/security-products/demos/go-fuzzing-example)
+
 [![Build Status](https://travis-ci.org/fuzzitdev/example-go.svg?branch=master)](https://travis-ci.org/fuzzitdev/example-go)
-[![fuzzit](https://app.fuzzit.dev/badge?org_id=hP8u8bNAda91Cnj0mKPX&branch=master)](https://fuzzit.dev)
 
 # Continuous Fuzzing for Golang Example
 
